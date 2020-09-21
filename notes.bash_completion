@@ -21,7 +21,7 @@ _notes_complete_notes() {
 }
 
 _notes_complete_commands() {
-    local valid_commands="new find grep open ls rm cat search"
+    local valid_commands="new find grep open ls rm cat search save code"
     COMPREPLY=($(compgen -W "${valid_commands}" -- "${1}"))
 }
 
@@ -43,6 +43,9 @@ _notes()
             grep)
                 ;;
             open|o)
+                _notes_complete_notes "$cur"
+                ;;
+            code)
                 _notes_complete_notes "$cur"
                 ;;
             cat|c)

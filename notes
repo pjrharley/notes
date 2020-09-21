@@ -138,6 +138,19 @@ save_notes() {
     git commit -m "$commit_msg"
 }
 
+open_vscode() {
+    if [ ! "$#" -gt 0 ]; then
+        code $notes_dir
+        return 0
+    fi
+
+    local note_path=$1
+    note_path=$( get_full_note_path "$note_path" )
+    code $notes_dir --goto "$note_path";
+}
+
+
+
 remove_note() {
     local rm_args=()
     if [[ "$1" == "-r" || "$1" == "--recursive" ]]; then
@@ -236,6 +249,8 @@ Usage:
     $name open|o <name>                   # Open a note for editing by full name
     $name rm [-r | --recursive] <name>    # Remove note, or folder if -r or --recursive is given
     $name cat <name>                      # Display note
+    $name save                            # 'git commit' any changes
+    $name code <name>                     # open VS code
     echo <name> | $name open|o            # Open all note filenames piped in
     echo <name> | $name cat               # Display all note filenames piped in
     $name --help                          # Print this usage information
@@ -291,6 +306,9 @@ main() {
             ;;
         "save" )
             cmd="save_notes"
+            ;;
+        "code" )
+            cmd="open_vscode"
             ;;
         --help | -help | -h )
             cmd="usage"
