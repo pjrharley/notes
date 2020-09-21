@@ -131,6 +131,13 @@ new_note() {
     open_note "$note_name"
 }
 
+save_notes() {
+    cd $notes_dir;
+    git add -A
+    local commit_msg="`git status --porcelain -u  | sort -b | sed 's/^\?\?/Added:/' | sed 's/^A /Added:/' | sed 's/^ *D/Deleted:/' | sed 's/^ *M/Changed:/'`"
+    git commit -m "$commit_msg"
+}
+
 remove_note() {
     local rm_args=()
     if [[ "$1" == "-r" || "$1" == "--recursive" ]]; then
@@ -281,6 +288,9 @@ main() {
             ;;
         "cat" )
             cmd="handle_multiple_notes cat"
+            ;;
+        "save" )
+            cmd="save_notes"
             ;;
         --help | -help | -h )
             cmd="usage"
